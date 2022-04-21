@@ -1,0 +1,38 @@
+﻿@model CustomerRelationshipManagment.Models.UserModel
+
+@{
+    ViewData["Title"] = "LogIn";
+}
+
+<h1>Log in</h1>
+
+<h4>User</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="LogIn">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Login" class="control-label"></label>
+                <input asp-for="Login" class="form-control" />
+                <span asp-validation-for="Login" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PasswordMd5" class="control-label">Password</label>
+                <input type="password" asp-for="PasswordMd5" class="form-control" />
+                <span asp-validation-for="PasswordMd5" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Log in" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<a asp-action="Register">Register</a>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

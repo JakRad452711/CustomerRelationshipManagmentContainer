@@ -1,0 +1,129 @@
+﻿@model IEnumerable<CustomerRelationshipManagment.Models.IndustryModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Industries</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            @if (
+                  @User.FindFirst(claim => claim.Type == System.Security.Claims.ClaimTypes.Role)?.Value == "2" ||
+                  @User.FindFirst(claim => claim.Type == System.Security.Claims.ClaimTypes.Role)?.Value == "3"
+              )
+            {
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+            }
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            @if (@User.FindFirst(claim => claim.Type == System.Security.Claims.ClaimTypes.Role)?.Value == "3")
+            {
+                <th></th>
+            }
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                @if (
+                      @User.FindFirst(claim => claim.Type == System.Security.Claims.ClaimTypes.Role)?.Value == "2" ||
+                      @User.FindFirst(claim => claim.Type == System.Security.Claims.ClaimTypes.Role)?.Value == "3"
+                  )
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                }
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                @if (@User.FindFirst(claim => claim.Type == System.Security.Claims.ClaimTypes.Role)?.Value == "3")
+                {
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">@ViewData["EditActionText"]</a>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <em>
+        <a asp-action="PreviousPage">@ViewData["PreviousPageText"]</a> |
+        <a asp-action="NextPage">@ViewData["NextPageText"]</a> :
+        @{
+            int currentPage = (int)ViewData["CurrentPage"];
+            int numberOfPages = (int)ViewData["NumberOfPages"];
+            int numberOfIndexesToDisplay = (int)ViewData["NumberOfIndexesToDisplay"];
+            int pagesRemaining = numberOfPages - currentPage;
+            int showFromPageNumber;
+            int showUntilPageNumber;
+
+            if (numberOfPages > 10)
+            {
+                if (pagesRemaining < Math.Ceiling((float)numberOfIndexesToDisplay / 2))
+                {
+                    showFromPageNumber = numberOfPages - (int)(numberOfIndexesToDisplay - 1);
+                    showUntilPageNumber = numberOfPages;
+                }
+                else if (currentPage < Math.Ceiling((float)numberOfIndexesToDisplay / 2))
+                {
+                    showFromPageNumber = 1;
+                    showUntilPageNumber = numberOfIndexesToDisplay;
+                }
+                else
+                {
+                    showFromPageNumber = currentPage - (int)(Math.Ceiling((float)numberOfIndexesToDisplay / 2) - 1);
+                    showUntilPageNumber = currentPage + (int)(numberOfIndexesToDisplay / 2);
+                }
+            }
+            else
+            {
+                showFromPageNumber = 1;
+                showUntilPageNumber = numberOfPages;
+            }
+
+            for (int i = showFromPageNumber; i <= showUntilPageNumber; i++)
+            {
+                if (i != currentPage)
+                {
+                    <a asp-action="ChangePage" asp-route-id="@i">[ @i ] </a>
+                }
+                else
+                {
+                    <Text>[ X ]</Text>
+                }
+            }
+        }
+    </em>
+</div>
+
+@if (
+    @User.FindFirst(claim => claim.Type == System.Security.Claims.ClaimTypes.Role)?.Value == "3"
+)
+{
+    <div>
+        <a asp-action="Create">@ViewData["CreateActionText"]</a>
+    </div>
+}
+
+@if (
+    @User.FindFirst(claim => claim.Type == System.Security.Claims.ClaimTypes.Role)?.Value == "2" ||
+    @User.FindFirst(claim => claim.Type == System.Security.Claims.ClaimTypes.Role)?.Value == "3"
+)
+{
+    <div>
+        <a asp-action="SwitchShowOption">@ViewData["DisplayOption"]</a>
+    </div>
+}
+<div>
+    <a href="@ViewData["HomePath"]">@ViewData["GoBackActionText"]</a>
+</div>
